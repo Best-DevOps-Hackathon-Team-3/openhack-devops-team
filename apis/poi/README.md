@@ -2,7 +2,7 @@
 # POI Service
 
 ## Overview
-POI Service API
+POI Service API - Info
 
 ## Build the Application
 
