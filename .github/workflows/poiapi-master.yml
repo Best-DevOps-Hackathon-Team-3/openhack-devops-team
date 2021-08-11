@@ -43,3 +43,22 @@ jobs:
         publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_POI }}
         images: '${{ secrets.ACR_URL }}/devopsoh/api-poi:${{github.run_id}}'
         slot-name: staging
+    - name: Login via Azure CLI
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}  
+    - name:  Swap staging slot into production
+      id: slot_swap
+      run: |
+        az webapp deployment slot swap -g ${{ env.rg-name }} -n ${{ env.app-name }} -s staging
+        url=$(az webapp show -g ${{ env.rg-name }} -n ${{ env.app-name }} --query "defaultHostName" -o tsv)
+        echo "::set-output name=url::https://openhackzl57ob94poi-staging.azurewebsites.net"
+      env:
+          rg-name: openhackzl57ob94rg
+          app-name: openhackzl57ob94poi
+    - name: az cli logout
+      run: az logout
+      if: ${{ always() }}
+           
+   
+        
