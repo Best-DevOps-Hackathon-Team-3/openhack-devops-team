@@ -55,7 +55,7 @@ jobs:
         echo "::set-output name=url::https://openhackzl57ob94poi-staging.azurewebsites.net"
       env:
           rg-name: openhackzl57ob94rg
-          app-name: openhackzl57ob94poi/staging
+          app-name: openhackzl57ob94poi
     - name: az cli logout
       run: az logout
       if: ${{ always() }}
