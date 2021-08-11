@@ -51,6 +51,7 @@ jobs:
       with:
         push: true
         context: ./apis/poi/web
+        registry: ${{ secrets.ACR_URL }}
         tags: devopsoh/api-poi:${{github.run_id}}
     # - name: Deploy POI API to Staging Slot
     #   uses: #TODO
