@@ -51,7 +51,7 @@ jobs:
       with:
         push: true
         file: ./apis/poi/web/Dockerfile
-        tags: openhackzl57ob94acr.azurecr.io/devopsoh/api-poi:${{github.GITHUB_RUN_ID}}
+        tags: devopsoh/api-poi:${{github.run_id}}
     - name: Create Issue on Package/Publish Error
       uses: nashmaniac/create-issue-action@v1.1
       with:
