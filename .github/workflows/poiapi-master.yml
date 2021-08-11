@@ -54,8 +54,14 @@ jobs:
         tags: |
           devopsoh/api-poi:${{github.run_id}}
           devopsoh/api-poi:latest
-    - name: Push to Registry
-      run: docker push ${{ secrets.ACR_URL }}/devopsoh/api-poi
+          ${{ secrets.ACR_URL }}/devopsoh/api-poi:${{github.run_id}}
+          ${{ secrets.ACR_URL }}/devopsoh/api-poi:latest
+    - name: List Images
+      run: docker images ls
+    - name: Push to Registry Base
+      run: docker push ${{ secrets.ACR_URL }}/devopsoh/api-poi:${{github.run_id}}
+    - name: Push to Registry Latest
+      run: docker push ${{ secrets.ACR_URL }}/devopsoh/api-poi:latest
     # - name: Deploy POI API to Staging Slot
     #   uses: #TODO
     - name: Create Issue on Publish/Deploy Error
