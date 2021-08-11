@@ -2,7 +2,7 @@
 # POI Service
 
 ## Overview
-POI Service API - Trigger deploying into staging slot
+POI Service API - Trigger deploying into staging slot - 2nd time's a charm
 
 ## Build the Application
 
