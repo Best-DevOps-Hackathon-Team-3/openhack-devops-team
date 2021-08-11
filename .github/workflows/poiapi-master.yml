@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - main
+      - master
     paths:
       - 'apis/poi/**'
 
@@ -19,24 +19,6 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 2.1.x
-    - name: Restore dependencies
-      run: dotnet restore
-      working-directory: ./apis/poi
-    - name: Build
-      run: dotnet build --no-restore
-      working-directory: ./apis/poi
-    - name: Test
-      run: dotnet test --no-build --verbosity normal
-      working-directory: ./apis/poi
-    - name: Create Issue on Build Error
-      uses: nashmaniac/create-issue-action@v1.1
-      with:
-        title: POI API Build Failed on master
-        token: ${{secrets.GITHUB_TOKEN}}
-        assignees: ${{github.actor}}
-        labels: bug
-        body: Workflow failed for commit ${{github.sha}}
-      if: ${{ failure() }}
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v1
     - name: Login to ACR
@@ -45,31 +27,19 @@ jobs:
         registry: ${{ secrets.ACR_URL }}
         username: ${{ secrets.ACR_USERNAME }}
         password: ${{ secrets.ACR_TOKEN }}
-    - name: Build and push
+    - name: Build and Publish Image
       id: docker_build
       uses: docker/build-push-action@v2
       with:
         push: true
-        file: ./apis/poi/web/Dockerfile
-        tags: openhackzl57ob94acr.azurecr.io/devopsoh/api-poi:${{github.GITHUB_RUN_ID}}
-    - name: Create Issue on Package/Publish Error
-      uses: nashmaniac/create-issue-action@v1.1
+        context: ./apis/poi/web
+        tags: |
+          ${{ secrets.ACR_URL }}/devopsoh/api-poi:${{github.run_id}}
+          ${{ secrets.ACR_URL }}/devopsoh/api-poi:latest
+    - name: Deploy to App Service
+      uses: azure/webapps-deploy@v2
       with:
-        title: POI API Package/Publish Failed
-        token: ${{secrets.GITHUB_TOKEN}}
-        assignees: ${{github.actor}}
-        labels: bug
-        body: Workflow failed for commit ${{github.sha}}
-      if: ${{ failure() }}
-    # - name: Deploy POI API to Staging Slot
-    #   uses: #TODO
-    - name: Create Issue on Deploy Error
-      uses: nashmaniac/create-issue-action@v1.1
-      with:
-        title: POI API Deploy Failed
-        token: ${{secrets.GITHUB_TOKEN}}
-        assignees: ${{github.actor}}
-        labels: bug
-        body: Workflow failed for commit ${{github.sha}}
-      if: ${{ failure() }}
-      
+        app-name: 'openhackzl57ob94poi'
+        publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_POI }}
+        images: '${{ secrets.ACR_URL }}/devopsoh/api-poi:${{github.run_id}}'
+        #slot-name: Staging
