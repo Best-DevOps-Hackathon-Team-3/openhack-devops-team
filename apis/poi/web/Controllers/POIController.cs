@@ -18,7 +18,7 @@ namespace poi.Controllers
             _context = context;
         }
 
-        [HttpGet(Name = "GetAllPOIs")]
+        ttpGet(Name = "GetAllPOIs")]
         [Produces("application/json", Type = typeof(POI))]
         public List<POI> GetAll()
         {
