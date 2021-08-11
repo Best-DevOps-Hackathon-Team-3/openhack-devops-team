@@ -42,4 +42,4 @@ jobs:
         app-name: 'openhackzl57ob94poi'
         publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_POI }}
         images: '${{ secrets.ACR_URL }}/devopsoh/api-poi:${{github.run_id}}'
-        slot-name: Staging
+        slot-name: staging
