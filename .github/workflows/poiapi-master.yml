@@ -19,6 +19,13 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 2.1.x
+    - name: Start staging 
+      id: start_staging
+      run: |
+        az webapp deployment slot create -g ${{ env.rg-name }} -n ${{ env.app-name }} -s staging  
+      env:
+          rg-name: openhackzl57ob94rg
+          app-name: openhackzl57ob94poi
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v1
     - name: Login to ACR
@@ -53,6 +60,13 @@ jobs:
         az webapp deployment slot swap -g ${{ env.rg-name }} -n ${{ env.app-name }} -s staging
         url=$(az webapp show -g ${{ env.rg-name }} -n ${{ env.app-name }} --query "defaultHostName" -o tsv)
         echo "::set-output name=url::https://openhackzl57ob94poi-staging.azurewebsites.net"
+      env:
+          rg-name: openhackzl57ob94rg
+          app-name: openhackzl57ob94poi
+    - name: stop staging 
+      id: stop_staging
+      run: |
+        az webapp deployment slot delete -g ${{ env.rg-name }} -n ${{ env.app-name }} -s staging  
       env:
           rg-name: openhackzl57ob94rg
           app-name: openhackzl57ob94poi
