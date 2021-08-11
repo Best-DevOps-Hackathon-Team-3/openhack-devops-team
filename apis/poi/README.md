@@ -1,4 +1,6 @@
 
+Triggering pull-request from poi dir for #10
+
 # POI Service
 
 ## Overview
