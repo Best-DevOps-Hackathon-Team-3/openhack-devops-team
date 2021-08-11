@@ -19,24 +19,6 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 2.1.x
-#     - name: Restore dependencies
-#       run: dotnet restore
-#       working-directory: ./apis/poi
-#     - name: Build
-#       run: dotnet build --no-restore
-#       working-directory: ./apis/poi
-#     - name: Test
-#       run: dotnet test --no-build --verbosity normal
-#       working-directory: ./apis/poi
-#     - name: Create Issue on Build Error
-#       uses: nashmaniac/create-issue-action@v1.1
-#       with:
-#         title: POI API Build Failed on master
-#         token: ${{secrets.GITHUB_TOKEN}}
-#         assignees: ${{github.actor}}
-#         labels: bug
-#         body: Workflow failed for commit ${{github.sha}}
-#       if: ${{ failure() }}
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v1
     - name: Login to ACR
@@ -54,21 +36,4 @@ jobs:
         tags: |
           ${{ secrets.ACR_URL }}/devopsoh/api-poi:${{github.run_id}}
           ${{ secrets.ACR_URL }}/devopsoh/api-poi:latest
-#     - name: List Images
-#       run: docker images ls
-#     - name: Push to Registry Base
-#       run: docker push ${{ secrets.ACR_URL }}/devopsoh/api-poi:${{github.run_id}}
-#     - name: Push to Registry Latest
-#       run: docker push ${{ secrets.ACR_URL }}/devopsoh/api-poi:latest
-    # - name: Deploy POI API to Staging Slot
-    #   uses: #TODO
-    - name: Create Issue on Publish/Deploy Error
-      uses: nashmaniac/create-issue-action@v1.1
-      with:
-        title: POI API Publish/Deploy Failed
-        token: ${{secrets.GITHUB_TOKEN}}
-        assignees: ${{github.actor}}
-        labels: bug
-        body: Workflow failed for commit ${{github.sha}}
-      if: ${{ failure() }}
       
