@@ -1,6 +1,7 @@
 name: POI_API
 
 on:
+  workflow_dispatch:
   pull_request:
     paths:
       - 'apis/poi/**'
