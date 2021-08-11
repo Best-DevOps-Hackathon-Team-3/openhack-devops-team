@@ -48,10 +48,10 @@ jobs:
     - name: Build and push
       id: docker_build
       uses: docker/build-push-action@v2
+      working-directory: ./apis/poi/web
       with:
         push: true
-        file: ./apis/poi/web/Dockerfile
-        tags: devopsoh/api-poi:${{github.run_id}}
+        tags: openhackzl57ob94acr.azurecr.io/devopsoh/api-poi:${{github.GITHUB_RUN_ID}}
     - name: Create Issue on Package/Publish Error
       uses: nashmaniac/create-issue-action@v1.1
       with:
