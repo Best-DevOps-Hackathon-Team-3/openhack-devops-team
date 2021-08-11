@@ -2,7 +2,7 @@
 # POI Service
 
 ## Overview
-POI Service API - Info We love modifying the readme just to kickoff a build!
+POI Service API - Trigger deploying into staging slot
 
 ## Build the Application
 
