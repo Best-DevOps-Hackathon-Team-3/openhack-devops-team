@@ -54,6 +54,9 @@ jobs:
         #publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_POI }}
         images: '${{ secrets.ACR_URL }}/devopsoh/api-poi:${{github.run_id}}'
         slot-name: staging
+    - name: Test Staging
+      id: test_staging
+      run: ./.github/WebTest.sh -i https://openhackzl57ob94poi-staging.azurewebsites.net/api/healthcheck/poi
     - name:  Swap staging slot into production
       id: slot_swap
       run: |
@@ -70,6 +73,7 @@ jobs:
       env:
           rg-name: openhackzl57ob94rg
           app-name: openhackzl57ob94poi
+      if: ${{ always() }}
     - name: az cli logout
       run: az logout
       if: ${{ always() }}
