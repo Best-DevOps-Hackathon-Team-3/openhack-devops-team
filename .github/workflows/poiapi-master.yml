@@ -26,7 +26,7 @@ jobs:
     - name: Start staging 
       id: start_staging
       run: |
-        az webapp deployment slot create -g ${{ env.rg-name }} -n ${{ env.app-name }} -s staging  
+        az webapp start -g ${{ env.rg-name }} -n ${{ env.app-name }} -s staging  
       env:
           rg-name: openhackzl57ob94rg
           app-name: openhackzl57ob94poi
@@ -63,13 +63,13 @@ jobs:
       env:
           rg-name: openhackzl57ob94rg
           app-name: openhackzl57ob94poi
-   # - name: stop staging 
-   #   id: stop_staging
-   #   run: |
-    #    az webapp deployment slot delete -g ${{ env.rg-name }} -n ${{ env.app-name }} -s staging  
-    #  env:
-    #      rg-name: openhackzl57ob94rg
-     #     app-name: openhackzl57ob94poi
+    - name: stop staging process
+      id: stop_staging
+      run: |
+        az webapp stop -g ${{ env.rg-name }} -n ${{ env.app-name }} -s staging  
+      env:
+          rg-name: openhackzl57ob94rg
+          app-name: openhackzl57ob94poi
     - name: az cli logout
       run: az logout
       if: ${{ always() }}
