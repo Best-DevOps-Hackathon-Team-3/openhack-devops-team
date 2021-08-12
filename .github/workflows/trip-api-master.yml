@@ -15,6 +15,17 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+    - name: Login via Azure CLI
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}  
+    - name: Start staging 
+      id: start_staging
+      run: |
+        az webapp start -g ${{ env.rg-name }} -n ${{ env.app-name }} -s staging  
+      env:
+          rg-name: openhackzl57ob94rg
+          app-name: openhackzl57ob94trips
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v1
     - name: Login to ACR
@@ -36,6 +47,25 @@ jobs:
       uses: azure/webapps-deploy@v2
       with:
         app-name: 'openhackzl57ob94trips'
-        publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_TRIPS }}
+        #publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_TRIPS }}
         images: '${{ secrets.ACR_URL }}/devopsoh/api-trips:${{github.run_id}}'
         slot-name: staging
+    - name:  Swap staging slot into production
+      id: slot_swap
+      run: |
+        az webapp deployment slot swap -g ${{ env.rg-name }} -n ${{ env.app-name }} -s staging
+        url=$(az webapp show -g ${{ env.rg-name }} -n ${{ env.app-name }} --query "defaultHostName" -o tsv)
+        echo "::set-output name=url::https://openhackzl57ob94trips-staging.azurewebsites.net"
+      env:
+          rg-name: openhackzl57ob94rg
+          app-name: openhackzl57ob94trips
+    - name: stop staging process
+      id: stop_staging
+      run: |
+        az webapp stop -g ${{ env.rg-name }} -n ${{ env.app-name }} -s staging  
+      env:
+          rg-name: openhackzl57ob94rg
+          app-name: openhackzl57ob94trips
+    - name: az cli logout
+      run: az logout
+      if: ${{ always() }}
