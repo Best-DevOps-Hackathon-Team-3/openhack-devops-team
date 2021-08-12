@@ -57,8 +57,8 @@ jobs:
     - name: Test Staging
       id: test_staging
       run: |
-        chmod +x ./.github/WebTest.sh
-        ./.github/WebTest.sh -i https://openhackzl57ob94poi-staging.azurewebsites.net/api/healthcheck/poi
+        chmod +x ./scripts/WebTest.sh
+        ./scripts/WebTest.sh -i https://openhackzl57ob94poi-staging.azurewebsites.net/api/healthcheck/poi
     - name:  Swap staging slot into production
       id: slot_swap
       run: |
