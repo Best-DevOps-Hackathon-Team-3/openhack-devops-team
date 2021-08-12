@@ -19,6 +19,17 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 2.1.x
+    - name: Login via Azure CLI
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}  
+    - name: Start staging 
+      id: start_staging
+      run: |
+        az webapp start -g ${{ env.rg-name }} -n ${{ env.app-name }} -s staging  
+      env:
+          rg-name: openhackzl57ob94rg
+          app-name: openhackzl57ob94poi
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v1
     - name: Login to ACR
@@ -40,19 +51,22 @@ jobs:
       uses: azure/webapps-deploy@v2
       with:
         app-name: 'openhackzl57ob94poi'
-        publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_POI }}
+        #publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_POI }}
         images: '${{ secrets.ACR_URL }}/devopsoh/api-poi:${{github.run_id}}'
         slot-name: staging
-    - name: Login via Azure CLI
-      uses: azure/login@v1
-      with:
-        creds: ${{ secrets.AZURE_CREDENTIALS }}  
     - name:  Swap staging slot into production
       id: slot_swap
       run: |
         az webapp deployment slot swap -g ${{ env.rg-name }} -n ${{ env.app-name }} -s staging
         url=$(az webapp show -g ${{ env.rg-name }} -n ${{ env.app-name }} --query "defaultHostName" -o tsv)
         echo "::set-output name=url::https://openhackzl57ob94poi-staging.azurewebsites.net"
+      env:
+          rg-name: openhackzl57ob94rg
+          app-name: openhackzl57ob94poi
+    - name: stop staging process
+      id: stop_staging
+      run: |
+        az webapp stop -g ${{ env.rg-name }} -n ${{ env.app-name }} -s staging  
       env:
           rg-name: openhackzl57ob94rg
           app-name: openhackzl57ob94poi
