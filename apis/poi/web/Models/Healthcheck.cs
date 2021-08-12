@@ -9,7 +9,7 @@ namespace poi.Models
         {
             Message = "POI Service Healthcheck";
             Status = "Healthy";
-            TestMessage = "This is a test message.";
+            TestMessage = "This is a test message doing an auto swap.";
         }
         [Newtonsoft.Json.JsonProperty(PropertyName = "message")]
         public string Message {get;set;}
